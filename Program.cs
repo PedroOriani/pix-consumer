@@ -44,11 +44,25 @@ consumer.Received += async (model, ea) =>
         PropertyNamingPolicy = JsonNamingPolicy.CamelCase // Define a política de nomenclatura para minúsculas
     };
     var jsonContent = JsonSerializer.Serialize(payment, jsonOptions);
-    Console.WriteLine($"JSON enviado: {jsonContent}");
 
     using var httpClient = new HttpClient();
+    httpClient.Timeout = TimeSpan.FromMinutes(5);
+    var startTime = DateTime.UtcNow; // Registra o momento atual
     var response = await httpClient.PostAsync("http://localhost:5039/payments/pix", new StringContent(jsonContent, Encoding.UTF8, "application/json"));
     var statusResponse = response.IsSuccessStatusCode ? "SUCCESS" : "FAILED";
+
+    // Verifica se o status é SUCCESS e se já se passaram mais de 2 minutos desde o início do processamento
+    if (statusResponse == "SUCCESS" && DateTime.UtcNow - startTime > TimeSpan.FromMinutes(2))
+    {
+        Console.WriteLine("Mais de 2 minutos se passaram. Alterando o status para FAILED.");
+
+        await using (var cmd = new NpgsqlCommand("UPDATE \"Payments\" SET \"Status\" = 'FAILED' WHERE \"Id\" = @id", conn))
+        {
+            cmd.Parameters.AddWithValue("id", payment.Id);
+            await cmd.ExecuteNonQueryAsync();
+        }
+        return;
+    }
 
     await using (var cmd = new NpgsqlCommand("UPDATE \"Payments\" SET \"Status\" = (@status) WHERE \"Id\" = @id", conn))
     {
