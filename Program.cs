@@ -46,7 +46,8 @@ consumer.Received += async (model, ea) =>
     var jsonContent = JsonSerializer.Serialize(payment, jsonOptions);
 
     using var httpClient = new HttpClient();
-    httpClient.Timeout = TimeSpan.FromMinutes(5);
+    int timeToVerifyBug = 5 
+    httpClient.Timeout = TimeSpan.FromMinutes(timeToVerifyBug);
     var startTime = DateTime.UtcNow; // Registra o momento atual
     var response = await httpClient.PostAsync("http://localhost:5039/payments/pix", new StringContent(jsonContent, Encoding.UTF8, "application/json"));
     var statusResponse = response.IsSuccessStatusCode ? "SUCCESS" : "FAILED";
