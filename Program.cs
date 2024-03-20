@@ -46,7 +46,7 @@ consumer.Received += async (model, ea) =>
     var jsonContent = JsonSerializer.Serialize(payment, jsonOptions);
 
     using var httpClient = new HttpClient();
-    int timeToVerifyBug = 5 
+    int timeToVerifyBug = 5;
     httpClient.Timeout = TimeSpan.FromMinutes(timeToVerifyBug);
     var startTime = DateTime.UtcNow; // Registra o momento atual
     var response = await httpClient.PostAsync("http://localhost:5039/payments/pix", new StringContent(jsonContent, Encoding.UTF8, "application/json"));
@@ -57,18 +57,21 @@ consumer.Received += async (model, ea) =>
     {
         Console.WriteLine("Mais de 2 minutos se passaram. Alterando o status para FAILED.");
 
-        await using (var cmd = new NpgsqlCommand("UPDATE \"Payments\" SET \"Status\" = 'FAILED' WHERE \"Id\" = @id", conn))
+        await using (var cmd = new NpgsqlCommand("UPDATE \"Payments\" SET \"Status\" = (@status), \"UpdatedAt\" = @updatedAt WHERE \"Id\" = @id", conn))
         {
-            cmd.Parameters.AddWithValue("id", payment.Id);
+            cmd.Parameters.AddWithValue("id", "FAILED");
+            cmd.Parameters.AddWithValue("status", statusResponse);
+            cmd.Parameters.AddWithValue("updatedAt", DateTime.UtcNow);
             await cmd.ExecuteNonQueryAsync();
         }
         return;
     }
 
-    await using (var cmd = new NpgsqlCommand("UPDATE \"Payments\" SET \"Status\" = (@status) WHERE \"Id\" = @id", conn))
+    await using (var cmd = new NpgsqlCommand("UPDATE \"Payments\" SET \"Status\" = (@status), \"UpdatedAt\" = @updatedAt WHERE \"Id\" = @id", conn))
     {
         cmd.Parameters.AddWithValue("status", statusResponse);
         cmd.Parameters.AddWithValue("id", payment.Id);
+        cmd.Parameters.AddWithValue("updatedAt", DateTime.UtcNow);
         await cmd.ExecuteNonQueryAsync();
     }
 
