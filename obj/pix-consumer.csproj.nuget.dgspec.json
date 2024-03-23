@@ -1,17 +1,17 @@
 {
   "format": 1,
   "restore": {
-    "/home/pedro/Documents/Driven/Stone/make-me-a-pix/pix-consumer/pix-consumer.csproj": {}
+    "/home/pedro/Documents/Driven/Stone/make-me-a-pix/pix-payment-consumer/pix-consumer.csproj": {}
   },
   "projects": {
-    "/home/pedro/Documents/Driven/Stone/make-me-a-pix/pix-consumer/pix-consumer.csproj": {
+    "/home/pedro/Documents/Driven/Stone/make-me-a-pix/pix-payment-consumer/pix-consumer.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "/home/pedro/Documents/Driven/Stone/make-me-a-pix/pix-consumer/pix-consumer.csproj",
+        "projectUniqueName": "/home/pedro/Documents/Driven/Stone/make-me-a-pix/pix-payment-consumer/pix-consumer.csproj",
         "projectName": "pix-consumer",
-        "projectPath": "/home/pedro/Documents/Driven/Stone/make-me-a-pix/pix-consumer/pix-consumer.csproj",
+        "projectPath": "/home/pedro/Documents/Driven/Stone/make-me-a-pix/pix-payment-consumer/pix-consumer.csproj",
         "packagesPath": "/home/pedro/.nuget/packages/",
-        "outputPath": "/home/pedro/Documents/Driven/Stone/make-me-a-pix/pix-consumer/obj/",
+        "outputPath": "/home/pedro/Documents/Driven/Stone/make-me-a-pix/pix-payment-consumer/obj/",
         "projectStyle": "PackageReference",
         "configFilePaths": [
           "/home/pedro/.nuget/NuGet/NuGet.Config"
@@ -63,20 +63,6 @@
           ],
           "assetTargetFallback": true,
           "warn": true,
-          "downloadDependencies": [
-            {
-              "name": "Microsoft.AspNetCore.App.Ref",
-              "version": "[8.0.3, 8.0.3]"
-            },
-            {
-              "name": "Microsoft.NETCore.App.Host.linux-x64",
-              "version": "[8.0.3, 8.0.3]"
-            },
-            {
-              "name": "Microsoft.NETCore.App.Ref",
-              "version": "[8.0.3, 8.0.3]"
-            }
-          ],
           "frameworkReferences": {
             "Microsoft.NETCore.App": {
               "privateAssets": "all"

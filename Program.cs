@@ -8,7 +8,8 @@ using RabbitMQ.Client;
 using RabbitMQ.Client.Events;
 using PixConsumer.DTOs;
 
-var connString = "Host=localhost;Username=postgres;Password=2483;Database=pix";
+//var connString = "Host=localhost;Username=postgres;Password=2483;Database=pix"; //Local
+var connString = "Host=172.22.0.7;Username=postgres;Password=postgres;Database=pixAPI_docker"; //Docker
 await using var conn = new NpgsqlConnection(connString);
 await conn.OpenAsync();
 
