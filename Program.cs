@@ -9,7 +9,7 @@ using RabbitMQ.Client.Events;
 using PixConsumer.DTOs;
 
 //var connString = "Host=localhost;Username=postgres;Password=2483;Database=pix"; //Local
-var connString = "Host=172.22.0.7;Username=postgres;Password=postgres;Database=pixAPI_docker"; //Docker
+var connString = "Host=172.23.0.6;Username=postgres;Password=postgres;Database=pixAPI_docker"; //Docker
 await using var conn = new NpgsqlConnection(connString);
 await conn.OpenAsync();
 
@@ -34,12 +34,26 @@ channel.QueueDeclare(
 Console.WriteLine("[*] Waiting for messages...");
 
 var consumer = new EventingBasicConsumer(channel);
+
+bool messageRejected = false;
+
 consumer.Received += async (model, ea) =>
 {
+    IBasicProperties basicProperties = channel.CreateBasicProperties();
+    basicProperties.Persistent = true;
+
     var body = ea.Body.ToArray();
     var message = Encoding.UTF8.GetString(body);
 
     PaymentDTO payment = JsonSerializer.Deserialize<PaymentDTO>(message);
+    
+    if (payment == null && !messageRejected) // Verifica se a mensagem é nula e se ainda não foi rejeitada
+    {
+        channel.BasicReject(ea.DeliveryTag, false);
+        messageRejected = true; // Define a variável de controle como true para indicar que a mensagem foi rejeitada
+        return;
+    }
+    
     var jsonOptions = new JsonSerializerOptions
     {
         PropertyNamingPolicy = JsonNamingPolicy.CamelCase // Define a política de nomenclatura para minúsculas
@@ -77,11 +91,13 @@ consumer.Received += async (model, ea) =>
     }
 
     Console.WriteLine("Payment updated!");
+
+    channel.BasicAck(deliveryTag: ea.DeliveryTag, multiple: false);
 };
 
 channel.BasicConsume(
     queue: queueName,
-    autoAck: true,
+    autoAck: false,
     consumer: consumer
 );
 
