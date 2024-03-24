@@ -9,7 +9,7 @@ using RabbitMQ.Client.Events;
 using PixConsumer.DTOs;
 
 //var connString = "Host=localhost;Username=postgres;Password=2483;Database=pix"; //Local
-var connString = "Host=172.23.0.6;Username=postgres;Password=postgres;Database=pixAPI_docker"; //Docker
+var connString = "Host=172.24.0.5;Username=postgres;Password=postgres;Database=pixAPI_docker"; //Docker
 await using var conn = new NpgsqlConnection(connString);
 await conn.OpenAsync();
 
@@ -74,8 +74,8 @@ consumer.Received += async (model, ea) =>
 
         await using (var cmd = new NpgsqlCommand("UPDATE \"Payments\" SET \"Status\" = (@status), \"UpdatedAt\" = @updatedAt WHERE \"Id\" = @id", conn))
         {
-            cmd.Parameters.AddWithValue("id", "FAILED");
-            cmd.Parameters.AddWithValue("status", statusResponse);
+            cmd.Parameters.AddWithValue("id", payment.Id);
+            cmd.Parameters.AddWithValue("status", "FAILED");
             cmd.Parameters.AddWithValue("updatedAt", DateTime.UtcNow);
             await cmd.ExecuteNonQueryAsync();
         }

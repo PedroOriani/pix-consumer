@@ -13,7 +13,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("pix-consumer")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+b907dbf8be347d846c4daa6b5148c93a4ffda21e")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+de9f75c89a7be1bc3368817695b5380e68498bff")]
 [assembly: System.Reflection.AssemblyProductAttribute("pix-consumer")]
 [assembly: System.Reflection.AssemblyTitleAttribute("pix-consumer")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]
